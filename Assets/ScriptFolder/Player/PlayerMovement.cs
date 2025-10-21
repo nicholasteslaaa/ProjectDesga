@@ -1,0 +1,77 @@
+using UnityEngine;
+
+
+[RequireComponent(typeof(CharacterController))]
+public class PlayerMovement : MonoBehaviour
+{
+    public float speed = 6f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 1.5f;
+
+    private CharacterController controller;
+    private Vector3 velocity;
+    private bool isGrounded;
+
+    private Animator __animator;
+
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        __animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            __animator.SetBool("Shooting", true);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            __animator.SetBool("Shooting", false);
+        }
+
+        // Check if player is grounded
+        isGrounded = controller.isGrounded;
+        __animator.SetBool("Jumping", !isGrounded);
+
+        if (isGrounded && velocity.y < 0)
+            velocity.y = -2f; // Keeps grounded properly
+
+        // Get input
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        // Move relative to current facing direction
+        // Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 move = Vector3.right * x + Vector3.forward * z;
+
+        controller.Move(move * speed * Time.deltaTime);
+
+        // Set the Animator float parameter
+        __animator.SetFloat("Velocity", move.magnitude);
+
+        // Jump
+        if (Input.GetButtonDown("Jump") && isGrounded)
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+        float finalGravity = gravity;
+        if (!isGrounded)
+        {
+            finalGravity -= 5;
+        }
+
+
+        // Apply gravity
+        // velocity.y += gravity * Time.deltaTime;
+        velocity.y += finalGravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    public Animator getAnimator()
+    {
+        return __animator;
+    }
+    
+}
