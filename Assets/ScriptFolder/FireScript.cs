@@ -70,17 +70,19 @@ public class FireScript : MonoBehaviour
         }
         
 
-
-        if (resetTimer > 0)
+        if (isAlreadySpread)
         {
-            resetTimer -= Time.deltaTime;
-        }
-        else
-        {
-            invis = 1f;
-            growTimer = growTime;
-            spreadingTimer = spreadingTime;
-            isAlreadySpread = false;
+            if (resetTimer > 0 )
+            {
+                resetTimer -= Time.deltaTime;
+            }
+            if (resetTimer <= 0 )
+            {
+                invis = 1f;
+                growTimer = (growTime/2);
+                spreadingTimer = spreadingTime;
+                isAlreadySpread = false;
+            }
         }
 
         // 💨 Fade out
