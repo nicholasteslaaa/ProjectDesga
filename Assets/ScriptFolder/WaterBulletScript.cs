@@ -43,7 +43,7 @@ public class WaterBulletScript : MonoBehaviour
         FireScript fire = other.GetComponent<FireScript>();
         if (fire)
         {
-            fire.reduceInvisible(damage);
+            fire.attack(damage);
         }
         hit = true;
     }

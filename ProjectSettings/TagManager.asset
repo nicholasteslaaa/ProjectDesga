@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NPC
   - PinPoint
+  - Fire
   layers:
   - Default
   - TransparentFX

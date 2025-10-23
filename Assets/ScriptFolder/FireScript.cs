@@ -1,9 +1,7 @@
-using System.Collections;
 using UnityEngine;
 
 public class FireScript : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
     private Animator animator;
 
     [Header("Timers")]
@@ -20,12 +18,13 @@ public class FireScript : MonoBehaviour
     public bool isAlreadySpread = false;
     public GameObject firePrefab; // assign in Inspector
 
+    string[] phase = { "Fire", "MedFire", "BigFire" };
+    int phaseIdx = 0;
+
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        invis = spriteRenderer.color.a;
-    
+
         invis = 1f;
         growTimer = growTime;
         spreadingTimer = spreadingTime;
@@ -39,12 +38,20 @@ public class FireScript : MonoBehaviour
         if (growTimer > 0)
         {
             growTimer -= Time.deltaTime;
-            if (growTimer < (growTime / 2) && growTimer > 0)
-                animator.Play("MedFire");
         }
         else
         {
-            animator.Play("BigFire");
+            if (phaseIdx < phase.Length-1)
+            {
+                phaseIdx += 1;
+                growTimer = growTime;
+            }
+        }
+
+        animator.Play(phase[phaseIdx]);
+        
+        if (phaseIdx >= phase.Length-1)
+        {
             spreadingTimer -= Time.deltaTime;
         }
 
@@ -68,38 +75,39 @@ public class FireScript : MonoBehaviour
             newFire.isAlreadySpread = false; // reset flag
             resetTimer = Random.Range(1, resetTimeRange);
         }
-        
+
 
         if (isAlreadySpread)
         {
-            if (resetTimer > 0 )
+            if (resetTimer > 0)
             {
                 resetTimer -= Time.deltaTime;
             }
-            if (resetTimer <= 0 )
+            if (resetTimer <= 0)
             {
                 invis = 1f;
-                growTimer = (growTime/2);
                 spreadingTimer = spreadingTime;
                 isAlreadySpread = false;
             }
         }
-
-        // 💨 Fade out
-        Color color = spriteRenderer.color;
-        color.a = invis;
-        spriteRenderer.color = color;
 
         if (invis <= 0)
         {
             Destroy(gameObject);
         }
     }
-
-    public void reduceInvisible(float val)
+    
+    
+    public void attack(float dmg)
     {
-        invis -= val / 10f;
-        invis = Mathf.Clamp01(invis); // avoid negative alpha
+        if (phaseIdx <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            phaseIdx -= 1;
+        }
     }
 
 

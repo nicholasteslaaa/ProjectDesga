@@ -3,7 +3,10 @@ using UnityEngine;
 public class GunScript : MonoBehaviour
 {
     public SkinScript skinScript;
+    public Animator animator;
     public GameObject water;
+    public GameObject smokeBomb;
+    
     public Spawner spawner;
     public float damage = 10;
 
@@ -28,6 +31,11 @@ public class GunScript : MonoBehaviour
             WaterBulletScript waterScript = water.GetComponent<WaterBulletScript>();
             waterScript.setDamage(damage);
             spawner.SpawnObject(water);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            animator.SetTrigger("Bombing");
+            spawner.SpawnObject(smokeBomb);
         }
     }
 }

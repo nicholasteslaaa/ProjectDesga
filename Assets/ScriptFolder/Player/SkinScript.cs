@@ -1,9 +1,7 @@
 using UnityEngine;
-using TMPro;
 
 public class SkinScript : MonoBehaviour
 {
-    public TextMeshProUGUI txt;
     public PlayerMovement __player;
 
     void Update()
@@ -30,8 +28,6 @@ public class SkinScript : MonoBehaviour
             __player.getAnimator().Play("SpinningBackward");
             newScale.x = -0.5f;
         }
-
-        txt.text = $"mouse x: {mouseX}  mouse y: {mouseY}  region: {region}  NewScale: {newScale}";
         transform.localScale = newScale;
     }
 

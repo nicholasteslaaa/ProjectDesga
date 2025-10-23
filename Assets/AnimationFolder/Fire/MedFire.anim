@@ -20,14 +20,14 @@ AnimationClip:
   m_PPtrCurves:
   - serializedVersion: 2
     curve:
-    - time: 0.016666668
+    - time: 0
       value: {fileID: 1223525310, guid: 44fd1cd6ca3ec0c4cb50f40d5e8dfd1f, type: 3}
     - time: 0.5
       value: {fileID: -383989884, guid: 29745602f5900f149af8aad04ef5c2c3, type: 3}
     - time: 0.98333335
       value: {fileID: 1223525310, guid: 44fd1cd6ca3ec0c4cb50f40d5e8dfd1f, type: 3}
     attribute: m_Sprite
-    path: 
+    path: FireSprite
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -39,7 +39,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 879163082
       attribute: 0
       script: {fileID: 0}
       typeID: 212
