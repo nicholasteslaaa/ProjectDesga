@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SkinScript : MonoBehaviour
 {
-    public PlayerMovement __player;
+    public PlayerComponentManager playerComponentManager;
 
     void Update()
     {
@@ -20,12 +20,18 @@ public class SkinScript : MonoBehaviour
 
         if (region == 1 && newScale.x < 0)
         {
-            __player.getAnimator().Play("SpinningForward");
+            if (!playerComponentManager.getAnimator().GetBool("Bombing"))
+            {
+                playerComponentManager.getAnimator().Play("SpinningForward");
+            }
             newScale.x = 0.5f;
         }
         else if (region == 2 && newScale.x > 0)
         {
-            __player.getAnimator().Play("SpinningBackward");
+            if (!playerComponentManager.getAnimator().GetBool("Bombing"))
+            {
+                playerComponentManager.getAnimator().Play("SpinningBackward");
+            }
             newScale.x = -0.5f;
         }
         transform.localScale = newScale;

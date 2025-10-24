@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smoke: {fileID: 6806434734849169318, guid: 9ea24b711e7ccfc409c829d98c4f7fb2, type: 3}
   extinguishDistance: 15
+  boomSoundClip: {fileID: 8300000, guid: b8e15031fb5927443aab2abe70609f67, type: 3}
 --- !u!1 &8584789838238889387
 GameObject:
   m_ObjectHideFlags: 0

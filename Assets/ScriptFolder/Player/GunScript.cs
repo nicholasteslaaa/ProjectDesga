@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
-    public SkinScript skinScript;
     public Animator animator;
     public GameObject water;
     public GameObject smokeBomb;
-    
     public Spawner spawner;
     public float damage = 10;
+
+    public PlayerComponentManager playerComponentManager;   
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 skinScale = skinScript.getScale();
+        Vector3 skinScale = playerComponentManager.getSkinScript().getScale();
         Vector3 newscale = water.transform.localScale;
         if (skinScale.x < 0)
         {
@@ -32,9 +32,10 @@ public class GunScript : MonoBehaviour
             waterScript.setDamage(damage);
             spawner.SpawnObject(water);
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && !animator.GetBool("Bombing") && playerComponentManager.getPlayerMovement().getIsGrounded())
         {
-            animator.SetTrigger("Bombing");
+            // animator.SetBool("Bombing",true);
+            animator.SetBool("Bombing",true);
             spawner.SpawnObject(smokeBomb);
         }
     }

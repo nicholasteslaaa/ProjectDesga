@@ -7,34 +7,31 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 6f;
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
-
+    public PlayerComponentManager playerComponentManager;
+    
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
 
-    private Animator __animator;
-
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        __animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            __animator.SetBool("Shooting", true);
+            playerComponentManager.getAnimator().SetBool("Shooting", true);
         }
         if (Input.GetMouseButtonUp(0))
         {
-            __animator.SetBool("Shooting", false);
+            playerComponentManager.getAnimator().SetBool("Shooting", false);
         }
 
         // Check if player is grounded
         isGrounded = controller.isGrounded;
-        __animator.SetBool("Jumping", !isGrounded);
+        playerComponentManager.getAnimator().SetBool("Jumping", !isGrounded);
 
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f; // Keeps grounded properly
@@ -50,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(move * speed * Time.deltaTime);
 
         // Set the Animator float parameter
-        __animator.SetFloat("Velocity", move.magnitude);
+        playerComponentManager.getAnimator().SetFloat("Velocity", move.magnitude);
 
         // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -69,9 +66,8 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    public Animator getAnimator()
+    public bool getIsGrounded()
     {
-        return __animator;
+        return controller.isGrounded;
     }
-    
 }

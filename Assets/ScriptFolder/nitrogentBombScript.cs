@@ -8,6 +8,8 @@ public class nitrogentBombScript : MonoBehaviour
     public float extinguishDistance = 15f;
     Rigidbody rb;
     float force = 6;
+
+    public AudioClip boomSoundClip;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,6 +19,11 @@ public class nitrogentBombScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+
+        PlayerComponentManager playerComponentManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
+        playerComponentManager.getAudioSource().PlayOneShot(boomSoundClip); // play boom sound
+        playerComponentManager.getAnimator().SetBool("Bombing",false);
+
         Instantiate(smoke, transform.position, transform.rotation);
         GameObject[] fires = GameObject.FindGameObjectsWithTag("Fire");
         foreach (GameObject fire in fires)
@@ -26,7 +33,7 @@ public class nitrogentBombScript : MonoBehaviour
             {
                 Destroy(fire);
             }
-        } 
+        }
         Destroy(gameObject);
     }
 }
