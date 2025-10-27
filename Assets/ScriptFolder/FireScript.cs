@@ -24,12 +24,13 @@ public class FireScript : MonoBehaviour
     [Header("Damage Settings")]
     public float damageDelay = 3f;
     public bool isPlayerHit = false;
-    private bool isAttacking = false;
-    private Coroutine attackCoroutine;
+
+    PlayerComponentManager playerComponentManager;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        playerComponentManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
 
         invis = 1f;
         growTimer = growTime;
@@ -41,12 +42,9 @@ public class FireScript : MonoBehaviour
         // Damage
         if (isPlayerHit)
         {
-            TryAttack();
+            playerComponentManager.getPlayerHealthHandler().attacked(damage);
         }
-        else
-        {
-            CancelAttack();
-        }
+        
 
         // 🔥 Handle fire growth animation
         if (growTimer > 0)
@@ -102,40 +100,9 @@ public class FireScript : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            playerComponentManager.getPlayerHealthHandler().cancelAttacked();
             isPlayerHit = false;
         }
     }
 
-    public void TryAttack()
-    {
-        if (attackCoroutine == null && isPlayerHit)
-        {
-            attackCoroutine = StartCoroutine(Attack());
-        }
-    }
-
-    IEnumerator Attack()
-    {
-        isAttacking = true;
-
-        yield return new WaitForSeconds(damageDelay);
-
-        PlayerComponentManager player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
-        player.getPlayerHealthHandler().attacked(damage);
-        Debug.Log("Attack Triggered!");
-
-        isAttacking = false;
-        attackCoroutine = null;
-    }
-
-    public void CancelAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-            isAttacking = false;
-            Debug.Log("AttackCanceled!");
-        }
-    }
 }

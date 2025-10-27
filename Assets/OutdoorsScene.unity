@@ -5097,6 +5097,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1087950372}
   oxygenSlider: {fileID: 609861882}
+  playerComponentManager: {fileID: 2120889352}
+  delay: 0.5
+  enabledOxygen: 0
+--- !u!114 &2120889352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4673559658288201796, guid: 3c61aba8f9a00054fbfa8890bc7bfd4c, type: 3}
+  m_PrefabInstance: {fileID: 2717351956107151307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120889342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13249369ad037c94e8af7756da4813aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2125810707
 GameObject:
   m_ObjectHideFlags: 0
