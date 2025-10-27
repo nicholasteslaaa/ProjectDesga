@@ -1365,9 +1365,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2249,9 +2249,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5095,6 +5095,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e5b2b83adedb941a08f8b93e9615a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthSlider: {fileID: 1087950372}
+  oxygenSlider: {fileID: 609861882}
 --- !u!1 &2125810707
 GameObject:
   m_ObjectHideFlags: 0
@@ -5250,6 +5252,10 @@ PrefabInstance:
     - target: {fileID: 6700429425270563551, guid: 3c61aba8f9a00054fbfa8890bc7bfd4c, type: 3}
       propertyPath: m_Color.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9078669823280460272, guid: 3c61aba8f9a00054fbfa8890bc7bfd4c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
