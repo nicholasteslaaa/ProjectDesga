@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6067003618981260388}
   - component: {fileID: 7706347209963626070}
   - component: {fileID: 6619597928470978093}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterBulletSkin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,9 +114,9 @@ GameObject:
   - component: {fileID: 7650674992362049212}
   - component: {fileID: 4814448422729149053}
   - component: {fileID: -3117071620496075404}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterBullet
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

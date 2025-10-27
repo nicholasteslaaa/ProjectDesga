@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
 
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -70,4 +71,24 @@ public class PlayerMovement : MonoBehaviour
     {
         return controller.isGrounded;
     }
+
+
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        float pushForce = 10f;
+        Rigidbody rb = hit.collider.attachedRigidbody;
+
+        // Skip if no rigidbody or is kinematic
+        if (rb == null || rb.isKinematic) return;
+
+        // Ignore if we are hitting the object from below (avoid pushing objects you stand on)
+        if (hit.moveDirection.y < -0.3f) return;
+
+        // Compute push direction (horizontal only)
+        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+
+        rb.AddForce(pushDir * pushForce, ForceMode.Impulse);
+    }
+
 }

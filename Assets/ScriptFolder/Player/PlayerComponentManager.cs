@@ -7,6 +7,7 @@ public class PlayerComponentManager : MonoBehaviour
     public PlayerMovement playerMovement;
     public GunScript gunScript;
     public SkinScript skinScript;
+    public PlayerHealthHandler playerHealthHandler;
 
 
     public Animator getAnimator()
@@ -28,10 +29,15 @@ public class PlayerComponentManager : MonoBehaviour
     {
         return gunScript;
     }
-    
+
     public SkinScript getSkinScript()
     {
         return skinScript;
+    }
+    
+    public PlayerHealthHandler getPlayerHealthHandler()
+    {
+        return playerHealthHandler;
     }
 
 }

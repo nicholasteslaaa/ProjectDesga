@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class FireScript : MonoBehaviour
 {
@@ -7,19 +8,24 @@ public class FireScript : MonoBehaviour
     [Header("Timers")]
     public float invis = 1f;
     public float growTime = 30f;
-    public float spreadingTime = 5f;
-    public float resetTimeRange = 100f;
+
+    public int[] rangeSpawnSpread = { 3, 5 };
 
     private float growTimer;
-    private float spreadingTimer;
-    private float resetTimer;
 
     [Header("Spread Settings")]
-    public bool isAlreadySpread = false;
     public GameObject firePrefab; // assign in Inspector
 
     string[] phase = { "Fire", "MedFire", "BigFire" };
     int phaseIdx = 0;
+
+    public float damage = 5f;
+
+    [Header("Damage Settings")]
+    public float damageDelay = 3f;
+    public bool isPlayerHit = false;
+    private bool isAttacking = false;
+    private Coroutine attackCoroutine;
 
     void Start()
     {
@@ -27,13 +33,21 @@ public class FireScript : MonoBehaviour
 
         invis = 1f;
         growTimer = growTime;
-        spreadingTimer = spreadingTime;
-        isAlreadySpread = false;
 
     }
 
     void Update()
     {
+        // Damage
+        if (isPlayerHit)
+        {
+            TryAttack();
+        }
+        else
+        {
+            CancelAttack();
+        }
+
         // 🔥 Handle fire growth animation
         if (growTimer > 0)
         {
@@ -41,7 +55,7 @@ public class FireScript : MonoBehaviour
         }
         else
         {
-            if (phaseIdx < phase.Length-1)
+            if (phaseIdx < phase.Length - 1)
             {
                 phaseIdx += 1;
                 growTimer = growTime;
@@ -49,56 +63,16 @@ public class FireScript : MonoBehaviour
         }
 
         animator.Play(phase[phaseIdx]);
-        
-        if (phaseIdx >= phase.Length-1)
-        {
-            spreadingTimer -= Time.deltaTime;
-        }
 
-
-        // 🌱 Spread new fire
-        if (spreadingTimer < 0 && !isAlreadySpread)
-        {
-            isAlreadySpread = true; // prevent multiple spreads
-
-            Vector3 newPos = new(
-                transform.position.x + Random.Range(-5f, 5f),
-                transform.position.y,
-                transform.position.z + Random.Range(-5f, 5f)
-            );
-
-            Quaternion newRot = Quaternion.Euler(0f, -50f, 0f);
-
-            // GameObject clone = Instantiate(firePrefab, newPos, Quaternion.identity);
-            GameObject clone = Instantiate(firePrefab, newPos, newRot);
-            FireScript newFire = clone.GetComponent<FireScript>();
-            newFire.isAlreadySpread = false; // reset flag
-            resetTimer = Random.Range(1, resetTimeRange);
-        }
-
-
-        if (isAlreadySpread)
-        {
-            if (resetTimer > 0)
-            {
-                resetTimer -= Time.deltaTime;
-            }
-            if (resetTimer <= 0)
-            {
-                invis = 1f;
-                spreadingTimer = spreadingTime;
-                isAlreadySpread = false;
-            }
-        }
 
         if (invis <= 0)
         {
             Destroy(gameObject);
         }
     }
-    
-    
-    public void attack(float dmg)
+
+
+    public void attacked(float dmg)
     {
         if (phaseIdx <= 0)
         {
@@ -110,5 +84,58 @@ public class FireScript : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isPlayerHit = true;
+        }
+    }
+    void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isPlayerHit = true;
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isPlayerHit = false;
+        }
+    }
 
+    public void TryAttack()
+    {
+        if (attackCoroutine == null && isPlayerHit)
+        {
+            attackCoroutine = StartCoroutine(Attack());
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        isAttacking = true;
+
+        yield return new WaitForSeconds(damageDelay);
+
+        PlayerComponentManager player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
+        player.getPlayerHealthHandler().attacked(damage);
+        Debug.Log("Attack Triggered!");
+
+        isAttacking = false;
+        attackCoroutine = null;
+    }
+
+    public void CancelAttack()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+            isAttacking = false;
+            Debug.Log("AttackCanceled!");
+        }
+    }
 }

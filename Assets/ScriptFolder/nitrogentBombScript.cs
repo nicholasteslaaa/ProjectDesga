@@ -1,9 +1,9 @@
-using Unity.VisualScripting;
 using UnityEngine;
-
+using FirstGearGames.SmoothCameraShaker;
 public class nitrogentBombScript : MonoBehaviour
 {
 
+    public ShakeData shakeData;
     public GameObject smoke;
     public float extinguishDistance = 15f;
     Rigidbody rb;
@@ -22,7 +22,9 @@ public class nitrogentBombScript : MonoBehaviour
 
         PlayerComponentManager playerComponentManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
         playerComponentManager.getAudioSource().PlayOneShot(boomSoundClip); // play boom sound
-        playerComponentManager.getAnimator().SetBool("Bombing",false);
+        playerComponentManager.getAnimator().SetBool("Bombing", false);
+
+        CameraShakerHandler.Shake(shakeData);
 
         Instantiate(smoke, transform.position, transform.rotation);
         GameObject[] fires = GameObject.FindGameObjectsWithTag("Fire");

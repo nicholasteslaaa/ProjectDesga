@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed27f8f51c7c99f4b9d6eb69cd16401c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeData: {fileID: 11400000, guid: 7499633885f1bcc4285ab2fc8ff99bb3, type: 2}
   smoke: {fileID: 6806434734849169318, guid: 9ea24b711e7ccfc409c829d98c4f7fb2, type: 3}
   extinguishDistance: 15
   boomSoundClip: {fileID: 8300000, guid: b8e15031fb5927443aab2abe70609f67, type: 3}

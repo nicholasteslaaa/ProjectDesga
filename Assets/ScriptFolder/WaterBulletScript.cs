@@ -36,15 +36,24 @@ public class WaterBulletScript : MonoBehaviour
     public void setDamage(float val)
     {
         damage = val;
-    }    
+    }
 
     void OnTriggerEnter(Collider other)
     {
         FireScript fire = other.GetComponent<FireScript>();
         if (fire)
         {
-            fire.attack(damage);
+            fire.attacked(damage);
         }
         hit = true;
+
+        Rigidbody rb = other.attachedRigidbody;
+        float pushForce = 10f;
+        if (rb != null)
+        {
+            Vector3 pushDir = (other.transform.position - transform.position).normalized;
+            rb.AddForce(pushDir * pushForce, ForceMode.Impulse);
+        }
     }
+
 }
