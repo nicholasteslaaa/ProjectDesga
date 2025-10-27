@@ -21,6 +21,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (playerComponentManager.getPlayerHealthHandler().getHealth() < 0)
+        {
+            return;
+        }
+
+
         if (Input.GetMouseButtonDown(0))
         {
             playerComponentManager.getAnimator().SetBool("Shooting", true);

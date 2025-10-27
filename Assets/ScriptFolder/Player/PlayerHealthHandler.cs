@@ -56,8 +56,11 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         if (delay < 0)
         {
-            playerComponentManager.getAnimator().Play("Attacked");
-            health -= damage;
+            if (health >= 0)
+            {
+                playerComponentManager.getAnimator().Play("Attacked");
+                health -= damage;
+            }
             delay = 0.5f;
         }
         else
@@ -69,6 +72,16 @@ public class PlayerHealthHandler : MonoBehaviour
     public void cancelAttacked()
     {
         delay = -1;
+    }
+
+    public float getHealth()
+    {
+        return health;
+    }
+
+    public float getOxygen()
+    {
+        return oxygen;
     }
     
 }
