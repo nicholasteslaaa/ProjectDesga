@@ -8,6 +8,9 @@ public class PlayerComponentManager : MonoBehaviour
     public GunScript gunScript;
     public SkinScript skinScript;
     public PlayerHealthHandler playerHealthHandler;
+    public PlayerCarryHandler playerCarryHandler;
+
+    public PlayerGameManager playerGameManager;
 
 
     public Animator getAnimator()
@@ -34,10 +37,20 @@ public class PlayerComponentManager : MonoBehaviour
     {
         return skinScript;
     }
-    
+
     public PlayerHealthHandler getPlayerHealthHandler()
     {
         return playerHealthHandler;
+    }
+
+    public PlayerCarryHandler getPlayerCarryHandler()
+    {
+        return playerCarryHandler;
+    }
+    
+    public PlayerGameManager getPlayerGameManager()
+    {
+        return playerGameManager;
     }
 
 }

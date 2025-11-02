@@ -47,12 +47,15 @@ public class WaterBulletScript : MonoBehaviour
         }
         hit = true;
 
-        Rigidbody rb = other.attachedRigidbody;
-        float pushForce = 10f;
-        if (rb != null)
+        if (other.tag != "Enemy")
         {
-            Vector3 pushDir = (other.transform.position - transform.position).normalized;
-            rb.AddForce(pushDir * pushForce, ForceMode.Impulse);
+            Rigidbody rb = other.attachedRigidbody;
+            float pushForce = 10f;
+            if (rb != null)
+            {
+                Vector3 pushDir = (other.transform.position - transform.position).normalized;
+                rb.AddForce(pushDir * pushForce, ForceMode.Impulse);
+            }
         }
     }
 

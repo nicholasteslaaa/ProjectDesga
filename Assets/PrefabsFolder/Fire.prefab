@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 6435315719514224591}
   - component: {fileID: 274717145478864633}
   - component: {fileID: 7168430160144355334}
+  - component: {fileID: -5524704184693035327}
   m_Layer: 0
   m_Name: Fire
   m_TagString: Fire
@@ -389,13 +390,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c8022ab924c1940b93c35b7130d7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invis: 1
   growTime: 5
   rangeSpawnSpread: 0300000005000000
   firePrefab: {fileID: 8504211203084592461}
   damage: 5
   damageDelay: 0.5
-  isPlayerHit: 0
 --- !u!65 &274717145478864633
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -439,3 +438,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &-5524704184693035327
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8504211203084592461}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

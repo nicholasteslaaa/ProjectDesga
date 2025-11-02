@@ -21,7 +21,6 @@ public class MouseScript : MonoBehaviour
     void Update()
     {
         HandleMouseLook();
-        setPinPoint();
     }
 
     void HandleMouseLook()
@@ -53,33 +52,6 @@ public class MouseScript : MonoBehaviour
                     targetRotation,
                     rotationSpeed * Time.deltaTime
                 );
-            }
-        }
-    }
-    
-    void setPinPoint()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            
-            GameObject lastPinpoint = GameObject.FindGameObjectWithTag("PinPoint"); 
-            if (lastPinpoint != null) {Destroy(lastPinpoint);}
-
-
-            GameObject[] NPCs = GameObject.FindGameObjectsWithTag("NPC");
-            // Raycast from camera through mouse cursor
-            if (Physics.Raycast(ray, out hit, 1000f, groundLayer))
-            {
-                // Get the hit point on the floor
-                Vector3 spawnPos = hit.point + Vector3.up * yOffset;
-                
-                foreach (GameObject NPC in NPCs){
-                    NPC.GetComponent<NPC_Movement>().setPosition(spawnPos);
-                }
-                // Spawn the object
-                Instantiate(objectToSpawn, spawnPos, Quaternion.identity);
             }
         }
     }

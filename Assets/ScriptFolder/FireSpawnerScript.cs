@@ -7,7 +7,7 @@ public class FireSpawnerScript : MonoBehaviour
     public int spawnCount = 10;
     private Collider cubeCollider;
 
-    float time = 5f;
+    float time = 3f;
     float timer = 0f;
 
     void Start()

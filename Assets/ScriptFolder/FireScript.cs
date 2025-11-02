@@ -6,7 +6,6 @@ public class FireScript : MonoBehaviour
     private Animator animator;
 
     [Header("Timers")]
-    public float invis = 1f;
     public float growTime = 30f;
 
     public int[] rangeSpawnSpread = { 3, 5 };
@@ -23,16 +22,16 @@ public class FireScript : MonoBehaviour
 
     [Header("Damage Settings")]
     public float damageDelay = 3f;
-    public bool isPlayerHit = false;
+    // public bool isPlayerHit = false;
 
     PlayerComponentManager playerComponentManager;
+    NPC_Movement NPC_Script;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        playerComponentManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
+        // playerComponentManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerComponentManager>();
 
-        invis = 1f;
         growTimer = growTime;
 
     }
@@ -40,9 +39,13 @@ public class FireScript : MonoBehaviour
     void Update()
     {
         // Damage
-        if (isPlayerHit)
+        if (playerComponentManager != null)
         {
             playerComponentManager.getPlayerHealthHandler().attacked(damage);
+        }
+        if (NPC_Script != null)
+        {
+            NPC_Script.attacked(damage);
         }
         
 
@@ -61,12 +64,6 @@ public class FireScript : MonoBehaviour
         }
 
         animator.Play(phase[phaseIdx]);
-
-
-        if (invis <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
 
 
@@ -86,14 +83,22 @@ public class FireScript : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            isPlayerHit = true;
+            playerComponentManager = other.GetComponent<PlayerComponentManager>();
+        }
+        if (other.tag == "NPC")
+        {
+            NPC_Script = other.GetComponent<NPC_Movement>();    
         }
     }
     void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player")
         {
-            isPlayerHit = true;
+            playerComponentManager = other.GetComponent<PlayerComponentManager>();
+        }
+        if (other.tag == "NPC")
+        {
+            NPC_Script = other.GetComponent<NPC_Movement>();    
         }
     }
     void OnTriggerExit(Collider other)
@@ -101,7 +106,11 @@ public class FireScript : MonoBehaviour
         if (other.tag == "Player")
         {
             playerComponentManager.getPlayerHealthHandler().cancelAttacked();
-            isPlayerHit = false;
+            playerComponentManager = null;
+        }
+        if (other.tag == "NPC")
+        {
+            NPC_Script = null;
         }
     }
 
