@@ -10,13 +10,24 @@ public enum StateMachine
 [RequireComponent(typeof(NavMeshAgent))]
 public class BanaspatiScript : MonoBehaviour
 {
+    [Header("Fire Setting")]
+    public GameObject fire;
+    public float fireDelay = 1f;
+    public float fireDelayTimer = -1f;
+
+    [Header("Movement Setting")]
+    public float patrolSpeed = 4f;
+    public float chasingSpeed = 6f;
+    public float nextDestinationDelay = 2f;
+    private float nextDestinationDelayTimer = 0f;
     private NavMeshAgent navMeshAgent;
     private StateMachine currentState;
-    Bounds navMeshBounds;
-    Vector3 destination;
-
+    private Vector3 destination;
     public float maxSampleDistance = 10f;
     public int maxAttempts = 30;
+    [Header("1/x")]
+    public int goToPlayerOnPatrolChance = 4;
+
 
     [Header("Detection Settings")]
     public float detectionDistance = 8f;
@@ -27,9 +38,11 @@ public class BanaspatiScript : MonoBehaviour
     private GameObject player;
     private GameObject lastDetectedObject; // store for gizmo visualization
 
+    [Header("Skin")]
+    public GameObject skin;
+
     void Start()
     {
-        navMeshBounds = GetNavMeshBounds();
         navMeshAgent = GetComponent<NavMeshAgent>();
         currentState = StateMachine.Patrol;
 
@@ -38,6 +51,8 @@ public class BanaspatiScript : MonoBehaviour
 
     void Update()
     {
+        skin.transform.position = transform.position;
+        
         GameObject objectSeen = rayCastDetect();
         if (objectSeen != null && objectSeen.CompareTag("Player"))
         {
@@ -47,23 +62,54 @@ public class BanaspatiScript : MonoBehaviour
 
         if (currentState == StateMachine.Patrol)
         {
+            navMeshAgent.speed = patrolSpeed;
             if (Vector3.Distance(destination, transform.position) <= 3f)
             {
                 destination = GetRandomPointOnNavMesh();
+                nextDestinationDelayTimer = nextDestinationDelay;
             }
         }
         else if (currentState == StateMachine.Engage)
         {
+
+            navMeshAgent.speed = chasingSpeed;
+            nextDestinationDelayTimer = 0f;
             destination = player.transform.position;
         }
 
+        if (isMoving(1f))
+        {
+            fireSpawnHandle();
+        }
+
+        if (nextDestinationDelayTimer > 0)
+        {
+            navMeshAgent.isStopped = true;
+            navMeshAgent.velocity = Vector3.zero;
+            nextDestinationDelayTimer -= Time.deltaTime;
+        }
+        else
+        {
+            navMeshAgent.isStopped = false;
+        }
+        
+
         navMeshAgent.SetDestination(destination);
+
     }
+
 
     public Vector3 GetRandomPointOnNavMesh()
     {
-        Bounds navMeshBounds = GetNavMeshBounds();
+        int chanceA = Random.Range(0, goToPlayerOnPatrolChance);
+        int chanceB = Random.Range(0, goToPlayerOnPatrolChance);
+        Debug.Log($"{chanceA} {chanceB}");
+        if (chanceA == chanceB)
+        {
+            return GameObject.FindGameObjectWithTag("Player").transform.position;
+        }
 
+        Bounds navMeshBounds = GetNavMeshBounds();
         for (int i = 0; i < maxAttempts; i++)
         {
             Vector3 randomPosition = new Vector3(
@@ -104,7 +150,6 @@ public class BanaspatiScript : MonoBehaviour
     public GameObject rayCastDetect()
     {
         lastDetectedObject = null;
-        bool anyHit = false;
 
         // Spread rays in a cone shape
         for (int i = 0; i < rayCount; i++)
@@ -114,15 +159,35 @@ public class BanaspatiScript : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(0, angle, 0);
             Vector3 direction = rotation * transform.forward;
 
+            // Raycast checks all colliders in detectionLayer
             if (Physics.Raycast(transform.position, direction, out RaycastHit hit, detectionDistance, detectionLayer))
             {
                 Debug.DrawRay(transform.position, direction * hit.distance, Color.green);
-                anyHit = true;
+
                 lastDetectedObject = hit.collider.gameObject;
 
-                // Return early if player detected
+                // ✅ Only detect player if it's the FIRST thing the ray hits
                 if (hit.collider.CompareTag("Player"))
-                    return hit.collider.gameObject;
+                {
+                    // Check if there's no wall between enemy and player
+                    Vector3 playerDirection = (hit.collider.transform.position - transform.position).normalized;
+                    float distanceToPlayer = Vector3.Distance(transform.position, hit.collider.transform.position);
+
+                    // Raycast again, but check if the first thing hit is indeed the player
+                    if (Physics.Raycast(transform.position, playerDirection, out RaycastHit blockCheck, distanceToPlayer))
+                    {
+                        if (blockCheck.collider.CompareTag("Player"))
+                        {
+                            // Player is visible — return them
+                            return hit.collider.gameObject;
+                        }
+                        else
+                        {
+                            // Something blocked the view (wall, object, etc.)
+                            continue;
+                        }
+                    }
+                }
             }
             else
             {
@@ -130,8 +195,9 @@ public class BanaspatiScript : MonoBehaviour
             }
         }
 
-        return anyHit ? lastDetectedObject : null;
+        return null;
     }
+
 
     // --- Draw Cone in Scene View for Debug ---
     void OnDrawGizmosSelected()
@@ -153,6 +219,26 @@ public class BanaspatiScript : MonoBehaviour
         {
             Vector3 dir = Quaternion.Euler(0, a, 0) * transform.forward;
             Gizmos.DrawRay(origin, dir * detectionDistance);
+        }
+    }
+
+    public bool isMoving(float threshold)
+    {
+        return navMeshAgent.velocity.magnitude > threshold;
+    }
+
+    public void fireSpawnHandle()
+    {
+        if (fireDelayTimer <= 0)
+        {
+            fireDelayTimer = fireDelay;
+            Vector3 newpos = transform.position;
+            newpos.y += 2;
+            Instantiate(fire, newpos, fire.transform.rotation);
+        }
+        else
+        {
+            fireDelayTimer -= Time.deltaTime;
         }
     }
 }

@@ -7,6 +7,8 @@ public class FireSpawnerScript : MonoBehaviour
     public int spawnCount = 10;
     private Collider cubeCollider;
 
+    public int maxNumOfFire = 100;
+
     float time = 3f;
     float timer = 0f;
 
@@ -18,11 +20,12 @@ public class FireSpawnerScript : MonoBehaviour
 
     void Update()
     {
+
         if (timer > 0)
         {
             timer -= Time.deltaTime;
         }
-        else
+        else 
         {
             SpawnObjectsOnTop();
             timer = time;
@@ -31,6 +34,16 @@ public class FireSpawnerScript : MonoBehaviour
 
     void SpawnObjectsOnTop()
     {
+        GameObject[] Fires = GameObject.FindGameObjectsWithTag("Fire");
+        Debug.Log(Fires.Length);
+        if (Fires.Length > maxNumOfFire){
+            for (int i = 0; i < spawnCount; i++)
+            {
+                Destroy(Fires[i]);
+            }
+            return;
+        }
+
         for (int i = 0; i < spawnCount; i++)
         {
             Vector3 spawnPos = GetRandomPointOnTop();
@@ -40,8 +53,9 @@ public class FireSpawnerScript : MonoBehaviour
 
     Vector3 GetRandomPointOnTop()
     {
-        Bounds bounds = cubeCollider.bounds;
+        
 
+        Bounds bounds = cubeCollider.bounds;
         float x = Random.Range(bounds.min.x, bounds.max.x);
         float z = Random.Range(bounds.min.z, bounds.max.z);
 
