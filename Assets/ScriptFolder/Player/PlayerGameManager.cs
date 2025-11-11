@@ -24,4 +24,8 @@ public class PlayerGameManager : MonoBehaviour
     {
         rescued = inpt;
     }
+    public int getTotalNPC()
+    {
+        return totalNpc;
+    }
 }

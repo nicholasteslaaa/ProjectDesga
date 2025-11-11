@@ -24,9 +24,19 @@ public class nitrogentBombScript : MonoBehaviour
         playerComponentManager.getAudioSource().PlayOneShot(boomSoundClip); // play boom sound
         playerComponentManager.getAnimator().SetBool("Bombing", false);
 
+        
         CameraShakerHandler.Shake(shakeData);
 
         Instantiate(smoke, transform.position, transform.rotation);
+
+        BanaspatiScript banaspati = GameObject.FindGameObjectWithTag("Enemy").GetComponent<BanaspatiScript>();
+        float enemyDistance = Vector3.Distance(transform.position, banaspati.transform.position);
+        if ( enemyDistance <= extinguishDistance)
+        {
+            banaspati.attack(extinguishDistance,(extinguishDistance-enemyDistance)/2);
+        }
+
+        
         GameObject[] fires = GameObject.FindGameObjectsWithTag("Fire");
         foreach (GameObject fire in fires)
         {

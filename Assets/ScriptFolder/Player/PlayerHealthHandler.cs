@@ -7,12 +7,16 @@ public class PlayerHealthHandler : MonoBehaviour
     public Slider oxygenSlider;
     public PlayerComponentManager playerComponentManager;
 
-    float health = 100f;
+    public float health = 100f;
     float oxygen = 100f;
 
     public float delay = -1f;
 
     public bool enabledOxygen = false;
+
+    public float regenDelay = 1f;
+    public float regenDelayTimer = -1f;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,11 +35,13 @@ public class PlayerHealthHandler : MonoBehaviour
     {
         healthSlider.value = health;
         oxygenSlider.value = oxygen;
-        
+
         if (enabledOxygen)
         {
             oxygenHandler();
         }
+
+        regenHealthHandle();
         
     }
     
@@ -60,6 +66,7 @@ public class PlayerHealthHandler : MonoBehaviour
             {
                 playerComponentManager.getAnimator().Play("Attacked");
                 health -= damage;
+                regenDelayTimer = regenDelay;
             }
             delay = 0.5f;
         }
@@ -82,6 +89,20 @@ public class PlayerHealthHandler : MonoBehaviour
     public float getOxygen()
     {
         return oxygen;
+    }
+
+
+    public void regenHealthHandle()
+    {
+        if (regenDelayTimer > 0)
+        {
+            regenDelayTimer -= Time.deltaTime;
+        }
+        
+        if (regenDelayTimer <= 0 && health < 100)
+        {
+            health += Time.deltaTime*5;
+        }
     }
     
 }

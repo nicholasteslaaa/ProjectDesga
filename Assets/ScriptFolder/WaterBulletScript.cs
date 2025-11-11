@@ -57,6 +57,12 @@ public class WaterBulletScript : MonoBehaviour
                 rb.AddForce(pushDir * pushForce, ForceMode.Impulse);
             }
         }
+
+        if (other.tag == "Enemy")
+        {
+            BanaspatiScript banaspati = other.GetComponent<BanaspatiScript>();
+            banaspati.attack(damage,0.01f);
+        }
     }
 
 }
