@@ -44,8 +44,9 @@ public class BanaspatiScript : MonoBehaviour
 
     [Header("Skin")]
     public GameObject skin;
+    public SpriteRenderer skinSprite;
     public Animator animator;
-
+    public Sprite[] Phase;
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -55,11 +56,33 @@ public class BanaspatiScript : MonoBehaviour
 
         healthSlider.minValue = 0f;
         healthSlider.maxValue = healthMax;
+
     }
 
     void Update()
     {
+        healthSlider.value = health;
+        skin.transform.position = transform.position;
         animator.SetFloat("Walking",navMeshAgent.velocity.magnitude);
+        animator.SetFloat("Health",health);
+
+        float cross = Vector3.Cross(transform.forward, navMeshAgent.desiredVelocity.normalized).y;
+
+        if (cross > 0)
+        {
+            Debug.Log("Turn LEFT");
+            Vector3 newScale = skinSprite.transform.localScale;
+            newScale.x = 1;
+            skinSprite.transform.localScale = newScale;
+        }
+        else if (cross < 0)
+        {
+            Debug.Log("Turn RIGHT");
+            Vector3 newScale = skinSprite.transform.localScale;
+            newScale.x = -1;
+            skinSprite.transform.localScale = newScale;
+        }
+                
         
         if (nextDestinationDelayTimer > 0)
         {
@@ -73,8 +96,6 @@ public class BanaspatiScript : MonoBehaviour
             navMeshAgent.isStopped = false;
         }
 
-        healthSlider.value = health;
-        skin.transform.position = transform.position;
 
         GameObject detected = rayCastDetect();
 
