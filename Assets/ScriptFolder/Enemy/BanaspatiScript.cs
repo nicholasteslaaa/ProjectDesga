@@ -44,6 +44,7 @@ public class BanaspatiScript : MonoBehaviour
 
     [Header("Skin")]
     public GameObject skin;
+    public Animator animator;
 
     void Start()
     {
@@ -58,6 +59,8 @@ public class BanaspatiScript : MonoBehaviour
 
     void Update()
     {
+        animator.SetFloat("Walking",navMeshAgent.velocity.magnitude);
+        
         if (nextDestinationDelayTimer > 0)
         {
             navMeshAgent.velocity = Vector3.zero;
