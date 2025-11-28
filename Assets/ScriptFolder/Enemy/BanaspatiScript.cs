@@ -66,23 +66,32 @@ public class BanaspatiScript : MonoBehaviour
         animator.SetFloat("Walking",navMeshAgent.velocity.magnitude);
         animator.SetFloat("Health",health);
 
-        float cross = Vector3.Cross(transform.forward, navMeshAgent.desiredVelocity.normalized).y;
+        float currentX = transform.position.x;
+        float destinationX = navMeshAgent.destination.x;
 
-        if (cross > 0)
+        // We need a small threshold because the agent might "overshoot" or constantly jitter around the destination
+        // A threshold (like 0.1f) prevents continuous flipping when the agent is almost stationary at the goal.
+        const float threshold = 0.1f; 
+
+        // Check if the agent is moving significantly to the left
+        if (currentX > destinationX + threshold)
         {
-            Debug.Log("Turn LEFT");
+            Debug.Log("Turning LEFT (Moving to a smaller X value)");
             Vector3 newScale = skinSprite.transform.localScale;
-            newScale.x = 1;
+            // Set scale X to 1 (Assuming 1 is the scale for facing the default/left direction)
+            newScale.x = Mathf.Abs(newScale.x); 
             skinSprite.transform.localScale = newScale;
         }
-        else if (cross < 0)
+        // Check if the agent is moving significantly to the right
+        else if (currentX < destinationX - threshold)
         {
-            Debug.Log("Turn RIGHT");
+            Debug.Log("Turning RIGHT (Moving to a larger X value)");
             Vector3 newScale = skinSprite.transform.localScale;
-            newScale.x = -1;
+            // Set scale X to -1 to flip the sprite and face right
+            newScale.x = -Mathf.Abs(newScale.x); 
             skinSprite.transform.localScale = newScale;
         }
-                
+                        
         
         if (nextDestinationDelayTimer > 0)
         {
@@ -112,7 +121,7 @@ public class BanaspatiScript : MonoBehaviour
         {
             navMeshAgent.speed = patrolSpeed;
 
-            if (Vector3.Distance(destination, transform.position) <= 5f)
+            if (Vector3.Distance(destination, transform.position) <= 4f)
             {
                 destination = GetRandomPointOnNavMesh();
                 nextDestinationDelayTimer = nextDestinationDelay;
