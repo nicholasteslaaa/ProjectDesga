@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class GunScript : MonoBehaviour
 {
     public Animator animator;
@@ -26,6 +27,15 @@ public class GunScript : MonoBehaviour
     public float cooldownTimeUtil1 = 15f;
     public float cooldownTimerUtil1 = 0;
 
+    [Header("Power Up")]
+    public float powerUpTimer = -1;
+    public float damageAddition = 0;
+    public int ammoAddition = 0;
+
+    public bool ammoChangeTrigger = false;
+
+
+
     void Start()
     {
         ammo = ammoAmmount;
@@ -35,6 +45,25 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log($"powerup; {powerUpTimer}, ammo: {ammo},ammoAdd: {ammoAddition}");
+        if (powerUpTimer > 0) {
+            if (!ammoChangeTrigger)
+            {
+                ammo = ammoAmmount+ammoAddition;
+                ammoChangeTrigger = true;
+            }
+            powerUpTimer -= Time.deltaTime;
+        }
+        else {
+            if (ammoChangeTrigger)
+            {
+                ammo = ammoAmmount;
+                ammoChangeTrigger = false;
+            }
+            damageAddition = 0f;
+            ammoAddition = 0;
+        }
+
         if (!isReloading)
         {
             gunStatus.fillAmount = (float)ammo / ammoAmmount;
@@ -100,7 +129,8 @@ public class GunScript : MonoBehaviour
     public void shoot()
     {
         WaterBulletScript waterScript = water.GetComponent<WaterBulletScript>();
-        waterScript.setDamage(damage);
+        float finalDamage = damage + damageAddition;
+        waterScript.setDamage(finalDamage);
         spawner.SpawnObject(water);
         ammo -= 1;
     }
@@ -116,6 +146,7 @@ public class GunScript : MonoBehaviour
             }
             else
             {
+                // int finalAmmo = ammoAmmount+ammoAddition;
                 isReloading = false;
                 ammo = ammoAmmount;
             }
@@ -126,6 +157,14 @@ public class GunScript : MonoBehaviour
     {
         isReloading = true;
         reloadDelayTimer = reloadDelay;
+    }
+
+
+    public void setPowerUp(float timer,float damageAddition,int ammoAddition)
+    {
+        powerUpTimer = timer;
+        this.damageAddition = damageAddition;
+        this.ammoAddition = ammoAddition;
     }
 }
 
