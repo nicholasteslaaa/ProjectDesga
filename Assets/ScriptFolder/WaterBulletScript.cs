@@ -61,7 +61,7 @@ public class WaterBulletScript : MonoBehaviour
         if (other.tag == "Enemy")
         {
             BanaspatiScript banaspati = other.GetComponent<BanaspatiScript>();
-            banaspati.attack(damage,0.01f);
+            banaspati.attack(damage,0.1f);
         }
     }
 

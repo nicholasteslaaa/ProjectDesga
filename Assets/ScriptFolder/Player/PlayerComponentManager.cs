@@ -12,6 +12,8 @@ public class PlayerComponentManager : MonoBehaviour
 
     public PlayerGameManager playerGameManager;
 
+    
+
 
     public Animator getAnimator()
     {

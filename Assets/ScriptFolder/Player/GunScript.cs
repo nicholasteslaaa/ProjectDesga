@@ -24,14 +24,14 @@ public class GunScript : MonoBehaviour
 
     [Header("Util 1 Setting")]
     public Image util1;
-    public float cooldownTimeUtil1 = 15f;
+    public float cooldownTimeUtil1 = 30f;
     public float cooldownTimerUtil1 = 0;
 
     [Header("Power Up")]
     public float powerUpTimer = -1;
-    public float damageAddition = 0;
+    public float damageAddition = 0f;
+    public float bombDamageAddition = 0f;
     public int ammoAddition = 0;
-
     public bool ammoChangeTrigger = false;
 
 
@@ -61,6 +61,7 @@ public class GunScript : MonoBehaviour
                 ammoChangeTrigger = false;
             }
             damageAddition = 0f;
+            bombDamageAddition = 0f;
             ammoAddition = 0;
         }
 
@@ -104,9 +105,14 @@ public class GunScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q) && !animator.GetBool("Bombing") && playerComponentManager.getPlayerMovement().getIsGrounded() && cooldownTimerUtil1 <= 0)
         {
-            // animator.SetBool("Bombing",true);
             animator.SetBool("Bombing", true);
-            spawner.SpawnObject(smokeBomb);
+            GameObject bombObject =  spawner.SpawnObject(smokeBomb);
+            if (powerUpTimer > 0)
+            {
+                nitrogentBombScript bomb = bombObject.GetComponent<nitrogentBombScript>();
+                BanaspatiScript banaspatiScript = GameObject.FindGameObjectWithTag("Enemy").GetComponent<BanaspatiScript>();
+                bomb.setAddDamage(banaspatiScript.health+1);
+            }
             setCooldownUtil1();
         }
     }
@@ -160,10 +166,11 @@ public class GunScript : MonoBehaviour
     }
 
 
-    public void setPowerUp(float timer,float damageAddition,int ammoAddition)
+    public void setPowerUp(float timer,float damageAddition,float bombDamageAddition,int ammoAddition)
     {
         powerUpTimer = timer;
         this.damageAddition = damageAddition;
+        this.bombDamageAddition = bombDamageAddition;
         this.ammoAddition = ammoAddition;
     }
 }

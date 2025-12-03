@@ -22,7 +22,7 @@ public class HolyWaterScript : MonoBehaviour
             if (playerComponent.getGunScript().powerUpTimer > 0) {   
                 return;    
             }
-            playerComponent.getGunScript().setPowerUp(10f,1000f,1000);
+            playerComponent.getGunScript().setPowerUp(10f,1000f,1000f,1000);
             Destroy(gameObject);
         }
     }

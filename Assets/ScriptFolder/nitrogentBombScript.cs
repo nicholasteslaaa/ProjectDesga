@@ -9,6 +9,9 @@ public class nitrogentBombScript : MonoBehaviour
     Rigidbody rb;
     float force = 6;
 
+    [Header("Damage Settings")]
+    public float damage = 50f;
+
     public AudioClip boomSoundClip;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,7 +36,7 @@ public class nitrogentBombScript : MonoBehaviour
         float enemyDistance = Vector3.Distance(transform.position, banaspati.transform.position);
         if ( enemyDistance <= extinguishDistance)
         {
-            banaspati.attack(extinguishDistance,(extinguishDistance-enemyDistance)/2);
+            banaspati.attack(damage,10f);
         }
 
         
@@ -48,4 +51,10 @@ public class nitrogentBombScript : MonoBehaviour
         }
         Destroy(gameObject);
     }
+
+    public void setAddDamage(float damage)
+    {
+        this.damage += damage;
+    }
+    
 }

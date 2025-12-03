@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -14,6 +15,9 @@ public class BanaspatiScript : MonoBehaviour
     public float healthMax = 1000f;
     public float health = 1000f;
     public Slider healthSlider;
+    bool isStunned = false;
+
+
 
     [Header("Fire Setting")]
     public GameObject fire;
@@ -68,6 +72,27 @@ public class BanaspatiScript : MonoBehaviour
 
         float currentX = transform.position.x;
         float destinationX = navMeshAgent.destination.x;
+
+
+        if (isStunned)
+        {
+            if(health < healthMax)
+            { 
+                health += Time.deltaTime * 80;
+            }
+            else
+            {
+                isStunned = false;
+            }
+            return;
+        }
+
+        if (health <= 0 )
+        {
+            isStunned = true;
+        }
+
+
 
         // We need a small threshold because the agent might "overshoot" or constantly jitter around the destination
         // A threshold (like 0.1f) prevents continuous flipping when the agent is almost stationary at the goal.
@@ -238,12 +263,15 @@ public class BanaspatiScript : MonoBehaviour
         else fireDelayTimer -= Time.deltaTime;
     }
 
-    public void attack(float dmg, float stopDuration)
+    public void attack(float dmg,float stopDuration)
     {
         health -= dmg;
         player = GameObject.FindGameObjectWithTag("Player");
         currentState = StateMachine.Engage;
-        nextDestinationDelayTimer = 0.1f;
+        if (stopDuration > nextDestinationDelayTimer)
+        {
+            nextDestinationDelayTimer = stopDuration;
+        }
     }
 
     void OnTriggerStay(Collider other)

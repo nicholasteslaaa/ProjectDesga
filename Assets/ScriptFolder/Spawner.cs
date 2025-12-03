@@ -16,12 +16,12 @@ public class Spawner : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void SpawnObject(GameObject objectToSpawn)
+    public GameObject SpawnObject(GameObject objectToSpawn)
     {
         Vector3 position = transform ? transform.position : transform.position;
         Quaternion rotation = transform ? transform.rotation : transform.rotation;
 
-        Instantiate(objectToSpawn, position, rotation);
+        return Instantiate(objectToSpawn, position, rotation);
     }
 }
 
