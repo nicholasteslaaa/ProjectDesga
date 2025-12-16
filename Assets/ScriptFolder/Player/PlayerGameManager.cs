@@ -13,7 +13,10 @@ public class PlayerGameManager : MonoBehaviour
 
     void Update()
     {
-        rescuedStatus.text = rescued.ToString()+"/"+totalNpc.ToString();
+        if (totalNpc > 0)
+        {
+            rescuedStatus.text = rescued.ToString()+"/"+totalNpc.ToString();
+        }
     }
 
     public int getNumRescued()

@@ -14,29 +14,38 @@ public class NPC_Movement : MonoBehaviour
     float delay = -1f;
 
     public bool isAlreadyInteract = false;
+
+    Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         __agent = GetComponent<NavMeshAgent>();
+        
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         playerComponentManager = player.GetComponent<PlayerComponentManager>();
         playerTransform = player.transform;
 
+        __agent.updateRotation = false;   // 👈 stop auto rotation
+
         interactButtonGuide.gameObject.SetActive(false);
+
         healthBar.minValue = 0;
         healthBar.maxValue = 100;
+        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (health <= 0) {return;}
-
-        // set UI position
-        Vector3 buttonGuideNewPos = transform.position;
-        buttonGuideNewPos.y += 1.5f;
-        buttonGuideNewPos.x += 1.5f;
-        interactButtonGuide.transform.position = buttonGuideNewPos;
+        animator.SetFloat("Magnitude",__agent.velocity.magnitude);
+        animator.SetFloat("Health",health);
+        
+        if (health <= 0) {
+            __agent.velocity = Vector3.zero;
+            __agent.isStopped = false;
+            return;
+        }
 
         Vector3 healthBarNewPos = transform.position;
         healthBarNewPos.y += 2;
@@ -100,5 +109,10 @@ public class NPC_Movement : MonoBehaviour
     public void setPlayerTransform(Transform pos)
     {
         playerTransform = pos;
+    }
+
+    public float getHealth()
+    {
+        return health;
     }
 }

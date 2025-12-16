@@ -81,7 +81,7 @@ public class PlayerCarryHandler : MonoBehaviour
     {
         PlayerGameManager player = playerComponentManager.getPlayerGameManager();
         player.setNumRescued(player.getNumRescued() + 1);
-        GameObject delNpc = rescuedNPC.transform.parent.gameObject;
+        GameObject delNpc = rescuedNPC.gameObject;
         unsetFollowed(rescuedNPC);
         Destroy(delNpc);
     }
