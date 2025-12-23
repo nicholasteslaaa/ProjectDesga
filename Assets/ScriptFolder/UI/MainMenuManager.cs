@@ -22,4 +22,11 @@ public class MainMenuManager : MonoBehaviour
         SaveSystem.NewSaveFile();
     }
 
+    public void quitGame()
+    {
+        Debug.Log("Quit Game"); // Shows in editor for testing
+        Application.Quit();
+    
+    }
+
 }
